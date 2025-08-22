@@ -25,7 +25,7 @@ This project implements a complete, automated DevOps pipeline for a containerize
 | **Container Registry** | ECR |
 
 ## 📊 Architecture
-![Architecture Diagram](images/architecture-diagram.png)
+![Architecture Diagram](images/architecture-diagram.png)  // We will add this image later
 
 The architecture features a secure VPC with:
 - **Public Subnets**: ALB and NAT Gateways
@@ -95,8 +95,7 @@ end-to-end-aws-devops-pipeline/
 ├── docs/
 └── README.md
 
-
-## 🚀 Getting Started
+## How to Use / Deploy
 [Instructions will be added as project progresses]
 
 ## 📝 License
