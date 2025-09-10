@@ -15,7 +15,7 @@ This project implements a complete DevOps automation pipeline for Reciplore - a 
 
 ## Technology Stack
 
-| Category          | Tools & Services               |
+|  Category         |  Tools & Services              |
 |-------------------|--------------------------------|
 | Frontend          | React, Vite, JavaScript        |
 | Backend           | Express.js, Node.js, pnpm      |
@@ -42,27 +42,32 @@ User Request → Frontend (React) → Backend (Express.js) → AI Service (Flask
 ![Architecture Diagram](images/architecture-diagram.png)  // We will add this image later
 
 ####  simple architecture just as a reference
+```ascii
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                             AWS Cloud                                   │
 │                                                                         │
-│  ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐    │
-│  │   S3 Bucket     │    │   IAM Roles     │    │   CloudWatch    │    │
-│  │ (Recipe Dataset)│    │ (Permissions)   │    │  (Logging)      │    │
-│  └─────────────────┘    └─────────────────┘    └─────────────────┘    │
-│         │                      │                      │                │
-│         │                      │                      │                │
-│         ▼                      ▼                      ▼                │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │                 Kubernetes Cluster (Minikube)                   │   │
-│  │                                                                 │   │
-│  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────┐│   │
-│  │  │   Frontend  │  │   Backend   │  │   AI Service│  │ MongoDB ││   │
-│  │  │  (React)    │  │ (Express.js)│  │  (Flask)    │  │         ││   │
-│  │  └─────────────┘  └─────────────┘  └─────────────┘  └─────────┘│   │
-│  │                                                                 │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
+│  ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐      │
+│  │   S3 Bucket     │    │   IAM Roles     │    │   CloudWatch    │      │
+│  │ (Recipe Dataset)│    │ (Permissions)   │    │  (Logging)      │      │
+│  └─────────────────┘    └─────────────────┘    └─────────────────┘      │
+│         │                      │                      │                 │
+│         │                      │                      │                 │
+│         ▼                      ▼                      ▼                 │
+│  ┌─────────────────────────────────────────────────────────────────┐    │
+│  │                 Kubernetes Cluster (Minikube)                   │    │
+│  │                                                                 │    │
+│  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────┐ │    │
+│  │  │   Frontend  │  │   Backend   │  │   AI Service│  │ MongoDB │ │    │
+│  │  │  (React)    │  │ (Express.js)│  │  (Flask)    │  │         │ │    │
+│  │  └─────────────┘  └─────────────┘  └─────────────┘  └─────────┘ │    │
+│  │                                                                 │    │
+│  └─────────────────────────────────────────────────────────────────┘    │
 │                                                                         │
 └─────────────────────────────────────────────────────────────────────────┘
+```
+
+
+
 
 #### The architecture features :
 //added next
