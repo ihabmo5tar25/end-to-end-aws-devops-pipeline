@@ -30,14 +30,20 @@ This project implements a complete DevOps automation pipeline for Reciplore - a 
 
 
 ## Data Flow Architecture
-
-User Request → Frontend (React) → Backend (Express.js) → AI Service (Flask)
-      ↑                                  ↓                      ↓
-      └──────←────── Response ←──────────┴──────←────── Recipe Recommendations
-                             ↓
-                         MongoDB (User Data)
-                             ↓
-                         AWS S3 (Recipe Dataset)
+```ascii
+┌─────────────┐    HTTP Requests    ┌─────────────┐    API Calls    ┌─────────────┐
+│   User      │ ──────────────────► │  Frontend   │ ──────────────► │   Backend   │
+│  (Browser)  │ ◄────────────────── │  (React)    │ ◄────────────── │ (Express.js)│
+└─────────────┘    HTML/CSS/JS      └─────────────┘    JSON Data    └─────────────┘
+                                                                         │
+                                                                         │ Database Queries
+                                                                         ▼
+┌─────────────┐    Recipe Data      ┌─────────────┐    Dataset       ┌─────────────┐
+│   MongoDB   │ ◄────────────────── │   AI        │ ◄─────────────── │   AWS S3    │
+│  (User Data)│ ──────────────────► │  Service    │    Sync          │(Recipe Data)│
+└─────────────┘    Recommendations  │  (Flask)    │                  └─────────────┘
+                                    └─────────────┘
+```
 ## System Architecture
 ![Architecture Diagram](images/architecture-diagram.png)  // We will add this image later
 
@@ -72,6 +78,44 @@ User Request → Frontend (React) → Backend (Express.js) → AI Service (Flask
 #### The architecture features :
 //added next
 
+
+#### Infrastructure Architecture:
+```ascii
+┌─────────────────────────────────────────────────────────────────┐
+│                 Developer Environment                           │
+│                                                                 │
+│  ┌─────────────────┐    ┌─────────────────┐                     │
+│  │   Local Machine │    │   GitHub Repo   │                     │
+│  │  (Development)  │    │  (Source Code)  │                     │
+│  └─────────────────┘    └─────────────────┘                     │
+│         │                         │                             │
+│         ▼                         ▼                             │
+│  ┌─────────────────┐    ┌─────────────────┐    Webhooks         │
+│  │   Docker        │    │   GitHub        │ ────────────────┐   │
+│  │  (Containers)   │    │   Actions       │                 │   │
+│  └─────────────────┘    └─────────────────┘                 │   │
+│         │                         │                         │   │
+│         ▼                         ▼                         │   │
+│  ┌─────────────────┐    ┌─────────────────┐                 │   │
+│  │   Minikube      │    │   AWS Cloud     │                 │   │
+│  │  (Kubernetes)   │    │                 │                 │   │
+│  │                 │    │  ┌─────────────┐│                 │   │
+│  │  ┌─────────────┐│    │  │   S3        ││                 │   │
+│  │  │   App       ││    │  │  Bucket     ││                 │   │ 
+│  │  │  Services   ││    │  └─────────────┘│                 │   │
+│  │  └─────────────┘│    │                 │                 │   │
+│  │                 │    └─────────────────┘                 │   │
+│  └─────────────────┘                                        │   │ 
+│         │                                                   │   │
+│         ▼                                                   │   │
+│  ┌─────────────────┐                                        │   │
+│  │   Monitoring    │ ◄──────────────────────────────────────┘   │
+│  │  (Prometheus/   │                                            │
+│  │    Grafana)     │                                            │
+│  └─────────────────┘                                            │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 ## Phased Implementation Plan (10 Weeks)
 ### Week 1: Project Setup & Repository Structure
 #### Tasks:
