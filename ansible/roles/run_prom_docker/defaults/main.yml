@@ -1,0 +1,4 @@
+prometheus_image: prom/prometheus:latest
+prometheus_port: 9090
+prometheus_volume_name: prometheus-data
+prometheus_config_path: /opt/prometheus/prometheus.yml

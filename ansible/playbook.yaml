@@ -1,0 +1,10 @@
+- name: "Setting up project environment"
+  hosts: localhost
+  become: yes
+  tasks:
+
+  roles:
+  - update_system
+  - install_docker
+  - run_prom_docker
+  - run_jenkins_docker

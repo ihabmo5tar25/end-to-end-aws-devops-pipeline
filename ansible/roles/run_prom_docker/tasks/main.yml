@@ -1,0 +1,29 @@
+- name: Ensure Prometheus config directory exists
+  file:
+    path: "{{ prometheus_config_path | dirname }}"
+    state: directory
+    mode: '0755'
+
+- name: Copy Prometheus configuration file
+  copy:
+    src: prometheus.yml
+    dest: "{{ prometheus_config_path }}"
+    mode: '0644'
+  notify: Restart Prometheus container
+
+- name: Create Docker volume for Prometheus data
+  community.docker.docker_volume:
+    name: "{{ prometheus_volume_name }}"
+    state: present
+
+- name: Run Prometheus container
+  community.docker.docker_container:
+    name: prometheus
+    image: "{{ prometheus_image }}"
+    state: started
+    restart_policy: always
+    published_ports:
+      - "{{ prometheus_port }}:9090"
+    volumes:
+      - "{{ prometheus_config_path }}:/etc/prometheus/prometheus.yml:ro"
+      - "{{ prometheus_volume_name }}:/prometheus"

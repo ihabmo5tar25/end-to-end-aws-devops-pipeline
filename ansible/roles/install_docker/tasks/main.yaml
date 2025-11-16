@@ -1,0 +1,30 @@
+
+- name: "Install ntpdate"
+  ansible.builtin.package:
+    name:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - software-properties-common
+    state: present
+
+- name: "Add Docker GPG key"
+  ansible.builtin.rpm_key:
+    state: present
+    key: https://download.docker.com/linux/ubuntu/gpg 
+
+- name: "Add docker repository"
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+    state: present
+
+- name: "Install Docker"
+  apt:
+    name: docker-ce
+    state: present
+
+- name: "Start and enable Docker service"
+  ansible.builtin.service:
+    name: docker
+    state: stared
+    enabled: true
