@@ -44,8 +44,7 @@ This project implements a complete DevOps automation pipeline for Reciplore - a 
 └─────────────┘    Recommendations  │  (Flask)    │                  └─────────────┘
                                     └─────────────┘
 ```
-## System Architecture
-![Architecture Diagram](images/architecture-diagram.png)  // We will add this image later
+
 
 ####  simple architecture just as a reference
 ```ascii
@@ -75,8 +74,7 @@ This project implements a complete DevOps automation pipeline for Reciplore - a 
 
 
 
-#### The architecture features :
-//added next
+
 
 
 #### Infrastructure Architecture:
