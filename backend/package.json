@@ -1,0 +1,57 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "echo 'Build complete'",
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "bun test",
+    "test:spec": "bun test --filter .spec",
+    "test:e2e": "bun test --filter e2e",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "axios": "^1.9.0",
+    "bcryptjs": "^2.4.3",
+    "chalk": "^5.4.1",
+    "cloudinary": "^2.5.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "express-async-handler": "^1.2.0",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "luxon": "^3.5.0",
+    "marked": "^15.0.11",
+    "mongoose": "^8.8.1",
+    "mongoose-paginate-v2": "^1.9.0",
+    "multer": "^1.4.5-lts.1",
+    "nanoid": "^5.0.9",
+    "node-html-parser": "^7.0.1",
+    "nodemailer": "^6.9.16",
+    "pdf-lib": "^1.17.1",
+    "pdfkit": "^0.17.1",
+    "slugify": "^1.6.6",
+    "streamifier": "^0.1.1",
+    "stripe": "^18.2.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.11.0",
+    "eslint": "^9.11.0",
+    "globals": "^15.11.0",
+    "nodemon": "^3.1.7"
+  },
+  "engines": {
+    "node": "20.17.0"
+  }
+}
