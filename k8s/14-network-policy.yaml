@@ -1,0 +1,34 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: reciplore-zero-trust
+  namespace: reciplore
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: backend
+    - podSelector:
+        matchLabels:
+          app: ai-service
+
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: backend
+    - podSelector:
+        matchLabels:
+          app: ai-service
+    - podSelector:
+        matchLabels:
+          app: mongo

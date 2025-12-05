@@ -1,0 +1,24 @@
+services:
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    image: baselabouelnour/frontend-depi:latest
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    image: baselabouelnour/backend-depi:latest
+
+  ai:
+    build:
+      context: ../ai
+      dockerfile: Dockerfile
+    image: baselabouelnour/ai-depi:latest
+
+  db:
+    build:
+      context: ../db
+      dockerfile: Dockerfile
+    image: baselabouelnour/db-depi:latest
