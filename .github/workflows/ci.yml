@@ -16,38 +16,29 @@ jobs:
         ports:
           - 27017:27017
         options: >-
-          --health-cmd="mongo --eval 'db.runCommand({ ping: 1 })'"
+          --health-cmd="mongosh --eval 'db.adminCommand(\"ping\")'"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=10
 
     steps:
+     
       - name: Checkout code
         uses: actions/checkout@v3
 
+    
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20.17.0'
 
+      
       - name: Install Bun
         run: curl -fsSL https://bun.sh/install | bash
 
+      
       - name: Install pnpm
         run: npm install -g pnpm
-
-      - name: Wait for MongoDB
-        run: |
-          for i in {1..60}; do
-            if mongo "mongodb://localhost:27017" --eval "db.stats()" > /dev/null 2>&1; then
-              echo "MongoDB is ready!"
-              exit 0
-            fi
-            echo "Waiting for MongoDB..."
-            sleep 2
-          done
-          echo "MongoDB did not become ready in time!"
-          exit 1
 
       ### === BACKEND ===
       - name: Install backend dependencies
@@ -75,7 +66,6 @@ jobs:
         run: docker build -t recipiore-backend:latest .
 
       ### === FRONTEND ===
-
       - name: Install frontend dependencies
         working-directory: frontend
         run: pnpm install
