@@ -16,13 +16,12 @@ jobs:
         ports:
           - 27017:27017
         options: >-
-          --health-cmd="mongosh --eval 'db.adminCommand(\"ping\")'"
+          --health-cmd="mongo --eval 'db.runCommand({ ping: 1 })'"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=10
 
     steps:
-      
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -31,23 +30,16 @@ jobs:
         with:
           node-version: '20.17.0'
 
-    
       - name: Install Bun
         run: curl -fsSL https://bun.sh/install | bash
 
-     
       - name: Install pnpm
         run: npm install -g pnpm
 
-     
-      - name: Install Mongosh
-        run: npm install -g mongosh
-
-     
       - name: Wait for MongoDB
         run: |
-          for i in {1..30}; do
-            if mongosh "mongodb://localhost:27017" --eval "db.stats()" > /dev/null 2>&1; then
+          for i in {1..60}; do
+            if mongo "mongodb://localhost:27017" --eval "db.stats()" > /dev/null 2>&1; then
               echo "MongoDB is ready!"
               exit 0
             fi
