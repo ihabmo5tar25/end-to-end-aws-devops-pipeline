@@ -15,6 +15,11 @@ jobs:
         image: mongo:latest
         ports:
           - 27017:27017
+        options: >-
+          --health-cmd="mongosh --eval 'db.adminCommand(\"ping\")'"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
     steps:
    
@@ -27,7 +32,7 @@ jobs:
       with:
         node-version: '20.17.0'
 
-   
+  
     - name: Install Bun
       run: curl -fsSL https://bun.sh/install | bash
 
@@ -35,37 +40,44 @@ jobs:
     - name: Install pnpm
       run: npm install -g pnpm
 
-   
+    ### === backend ===
     - name: Install backend dependencies
       working-directory: backend
       run: pnpm install
 
-   
-    - name: Run backend tests
+    - name: Run backend unit tests
       working-directory: backend
+      env:
+        PORT: 3000
+        NODE_ENV: test
+        MONGODB_URI: "mongodb://localhost:27017/recipiore-test"
       run: ~/.bun/bin/bun test
 
-    
+    - name: Run backend e2e tests
+      working-directory: backend
+      env:
+        PORT: 3000
+        NODE_ENV: test
+        MONGODB_URI: "mongodb://localhost:27017/recipiore-test"
+      run: ~/.bun/bin/bun test:e2e
+
     - name: Build backend Docker image
       working-directory: backend
       run: docker build -t recipiore-backend:latest .
 
-  
+    ### === frontend ===
     - name: Install frontend dependencies
       working-directory: frontend
       run: pnpm install
 
-  
     - name: Lint frontend code
       working-directory: frontend
       run: pnpm run lint
 
-   
     - name: Build frontend
       working-directory: frontend
       run: pnpm run build
 
-   
     - name: Build frontend Docker image
       working-directory: frontend
       run: docker build -t recipiore-frontend:latest .
