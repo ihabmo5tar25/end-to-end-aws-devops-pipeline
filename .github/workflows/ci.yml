@@ -15,7 +15,6 @@ jobs:
         image: mongo:latest
         ports:
           - 27017:27017
-       
         options: >-
           --health-cmd="mongosh --eval 'db.adminCommand(\"ping\")'"
           --health-interval=10s
@@ -23,11 +22,11 @@ jobs:
           --health-retries=10
 
     steps:
-     
+      
       - name: Checkout code
         uses: actions/checkout@v3
 
-      
+     
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -37,11 +36,11 @@ jobs:
       - name: Install Bun
         run: curl -fsSL https://bun.sh/install | bash
 
-     
+   
       - name: Install pnpm
         run: npm install -g pnpm
 
-     
+      
       - name: Wait for MongoDB
         run: |
           for i in {1..30}; do
@@ -55,8 +54,7 @@ jobs:
           echo "MongoDB did not become ready in time!"
           exit 1
 
-      # === BACKEND ===
-
+      ### === BACKEND ===
       - name: Install backend dependencies
         working-directory: backend
         run: pnpm install
@@ -66,8 +64,7 @@ jobs:
         env:
           PORT: 3000
           NODE_ENV: test
-         
-          MONGODB_URI: "mongodb://mongo:27017/recipiore-test"
+          DB_TEST: "mongodb://mongo:27017/graduationproject_test"
         run: ~/.bun/bin/bun test
 
       - name: Run backend e2e tests
@@ -75,14 +72,14 @@ jobs:
         env:
           PORT: 3000
           NODE_ENV: test
-          MONGODB_URI: "mongodb://mongo:27017/recipiore-test"
+          DB_TEST: "mongodb://mongo:27017/graduationproject_test"
         run: ~/.bun/bin/bun test:e2e
 
       - name: Build backend Docker image
         working-directory: backend
         run: docker build -t recipiore-backend:latest .
 
-      # === FRONTEND ===
+      ### === FRONTEND ===
 
       - name: Install frontend dependencies
         working-directory: frontend
