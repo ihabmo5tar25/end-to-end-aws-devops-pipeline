@@ -1,0 +1,71 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+
+    steps:
+   
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+   
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20.17.0'
+
+   
+    - name: Install Bun
+      run: curl -fsSL https://bun.sh/install | bash
+
+   
+    - name: Install pnpm
+      run: npm install -g pnpm
+
+   
+    - name: Install backend dependencies
+      working-directory: backend
+      run: pnpm install
+
+   
+    - name: Run backend tests
+      working-directory: backend
+      run: ~/.bun/bin/bun test
+
+    
+    - name: Build backend Docker image
+      working-directory: backend
+      run: docker build -t recipiore-backend:latest .
+
+  
+    - name: Install frontend dependencies
+      working-directory: frontend
+      run: pnpm install
+
+  
+    - name: Lint frontend code
+      working-directory: frontend
+      run: pnpm run lint
+
+   
+    - name: Build frontend
+      working-directory: frontend
+      run: pnpm run build
+
+   
+    - name: Build frontend Docker image
+      working-directory: frontend
+      run: docker build -t recipiore-frontend:latest .
