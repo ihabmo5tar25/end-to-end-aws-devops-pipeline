@@ -11,7 +11,9 @@
     "test:spec": "bun test --filter .spec",
     "test:e2e": "bun test --filter e2e",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "db:clone": "node scripts/clone-database.js",
+    "db:check": "node scripts/check-database.js"
   },
   "keywords": [],
   "author": "",

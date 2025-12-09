@@ -16,18 +16,20 @@ This project implements a complete DevOps automation pipeline for Reciplore - a 
 
 ## Technology Stack
 
-| Category         | Tools & Services                    |
-| ---------------- | ----------------------------------- |
-| Frontend         | React, Vite, JavaScript             |
-| Backend          | Express.js, Node.js, pnpm           |
-| AI Service       | Flask, Python, Pandas, Scikit-learn |
-| Database         | MongoDB                             |
-| Containerization | Docker                              |
-| Orchestration    | Kubernetes (Minikube)               |
-| Cloud Services   | AWS S3, AWS IAM, AWS CLI            |
-| CI/CD            | GitHub Actions                      |
-| Monitoring       | Prometheus, Grafana                 |
-| Data             | RecipeNLG Dataset (2GB CSV)         |
+|  Category         |  Tools & Services              |
+|-------------------|--------------------------------|
+| Frontend          | React, Vite, JavaScript        |
+| Backend           | Express.js, Node.js, pnpm      |
+| AI (FURURE)       | Flask, Python, Pandas, Scikit-learn |
+| Database          | MongoDB                        |
+| Setup             | Ansible                        |
+| Containerization  | Docker                         |
+| Orchestration     | Docker Compose & Kubernetes (Minikube) |
+| Cloud Services    | AWS For Deployment             |
+| CI/CD             | GitHub Actions                 |
+| VCS               | GIT                            | 
+| Monitoring        | Prometheus, Grafana            |
+
 
 ## Data Flow Architecture
 
@@ -38,13 +40,15 @@ This project implements a complete DevOps automation pipeline for Reciplore - a 
 └─────────────┘    HTML/CSS/JS      └─────────────┘    JSON Data    └─────────────┘
                                                                          │
                                                                          │ Database Queries
-                                                                         ▼
+                                        (FURURE)                                 ▼
 ┌─────────────┐    Recipe Data      ┌─────────────┐    Dataset       ┌─────────────┐
 │   MongoDB   │ ◄────────────────── │   AI        │ ◄─────────────── │   AWS S3    │
 │  (User Data)│ ──────────────────► │  Service    │    Sync          │(Recipe Data)│
 └─────────────┘    Recommendations  │  (Flask)    │                  └─────────────┘
                                     └─────────────┘
-```
+```                               
+
+
 
 #### Infrastructure Architecture:
 
@@ -75,7 +79,7 @@ This project implements a complete DevOps automation pipeline for Reciplore - a 
 │  │                Application Layer                     │   │
 │  │  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌────────┐   │   │
 │  │  │Frontend │  │ Backend │  │   AI    │  │MongoDB │   │   │
-│  │  │ (React) │  │(Node.js)│  │(Flask)  │  │        │   │   │
+│  │  │ (React) │  │(Node.js)│  │(FUTURE) │  │        │   │   │
 │  │  └─────────┘  └─────────┘  └─────────┘  └────────┘   │   │
 │  └──────────────────────────────────────────────────────┘   │
 │  ┌──────────────────────────────────────────────────────┐   │
@@ -90,8 +94,8 @@ This project implements a complete DevOps automation pipeline for Reciplore - a 
 ┌─────────────────────────────────────────────────────────────┐
 │                        AWS Cloud                            │
 │                  ┌──────────────┐                           │
-│                  │   S3 Bucket  │                           │
-│                  │(Recipe Data) │                           │
+│                  │  Deployment  │                           │
+│                  │              │                           │
 │                  └──────────────┘                           │
 └─────────────────────────────────────────────────────────────┘
 ```
