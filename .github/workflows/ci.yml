@@ -2,9 +2,9 @@ name: CI Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build-and-test:
@@ -22,21 +22,17 @@ jobs:
           --health-retries=10
 
     steps:
-     
       - name: Checkout code
         uses: actions/checkout@v3
 
-     
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20.17.0'
+          node-version: "20.17.0"
 
-     
       - name: Install Bun
         run: curl -fsSL https://bun.sh/install | bash
 
-      
       - name: Install pnpm
         run: npm install -g pnpm
 
@@ -45,14 +41,6 @@ jobs:
         working-directory: backend
         run: pnpm install
 
-    
-      - name: Seed test database
-        working-directory: backend
-        env:
-          DB_TEST: "mongodb://localhost:27017/graduationproject_test"
-        run: node scripts/seed.js
-
-   
       - name: Run backend unit tests
         working-directory: backend
         env:
