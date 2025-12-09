@@ -1,6 +1,5 @@
-version: '1.0'
+version: "1.0"
 services:
-  # MongoDB Database Service
   mongodb:
     image: mongo:7.0
     container_name: reciplore-mongodb
@@ -23,7 +22,6 @@ services:
       retries: 5
       start_period: 10s
 
-  # Backend Service
   backend:
     build:
       context: ./backend
@@ -33,9 +31,7 @@ services:
     env_file:
       - ./backend/config/dev.env
     environment:
-      # Unset CONNECTION_URL_DEPLOY to force use of local MongoDB
       CONNECTION_URL_DEPLOY: mongodb://${MONGO_ROOT_USERNAME:-admin}:${MONGO_ROOT_PASSWORD:-password123}@mongodb:27017/${MONGO_DATABASE:-graduationproject}?authSource=admin
-      # Override CONNECTION_URL_LOCAL to use Docker service name for MongoDB
       CONNECTION_URL_LOCAL: mongodb://${MONGO_ROOT_USERNAME:-admin}:${MONGO_ROOT_PASSWORD:-password123}@mongodb:27017/${MONGO_DATABASE:-graduationproject}?authSource=admin
     ports:
       - "${BACKEND_PORT:-3000}:3000"
@@ -43,8 +39,8 @@ services:
       mongodb:
         condition: service_healthy
     networks:
-      - database-network # Can access MongoDB
-      - application-network # Can access Frontend
+      - database-network
+      - application-network
     volumes:
       - backend_uploads:/app/src/uploads
     healthcheck:
@@ -60,7 +56,6 @@ services:
       retries: 3
       start_period: 10s
 
-  # Frontend Service
   frontend:
     build:
       context: ./frontend
@@ -91,7 +86,6 @@ services:
       retries: 3
       start_period: 5s
 
-# Named volumes for data persistence
 volumes:
   mongodb_data:
     driver: local
@@ -101,14 +95,9 @@ volumes:
     driver: local
 
 networks:
-  # Database Network: Only Backend and MongoDB
-  # MongoDB is isolated from Frontend and AI Service
   database-network:
     driver: bridge
     name: reciplore-database
-
-  # Application Network: Frontend and Backend
-  # Frontend can only reach Backend
   application-network:
     driver: bridge
     name: reciplore-application
