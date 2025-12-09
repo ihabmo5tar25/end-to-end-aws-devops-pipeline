@@ -11,11 +11,12 @@ services:
       dockerfile: Dockerfile
     image: baselabouelnour/backend-depi:latest
 
-  ai:
-    build:
-      context: ../ai
-      dockerfile: Dockerfile
-    image: baselabouelnour/ai-depi:latest
+  # AI service - Future implementation (not currently deployed)
+  # ai:
+  #   build:
+  #     context: ../ai
+  #     dockerfile: Dockerfile
+  #   image: baselabouelnour/ai-depi:latest
 
   db:
     build:

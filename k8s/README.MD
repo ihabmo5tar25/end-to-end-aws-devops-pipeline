@@ -13,8 +13,8 @@ kubernetes/
 ├── 03-backend-secret.yaml
 ├── 04-backend-deployment.yaml
 ├── 05-backend-service.yaml
-├── 06-ai-deployment.yaml
-├── 07-ai-service.yaml
+├── 06-ai-deployment.yaml          # Future: AI service deployment
+├── 07-ai-service.yaml             # Future: AI service
 ├── 08-frontend-deployment.yaml
 ├── 09-frontend-service.yaml
 ├── 10-mongo-pvc.yaml
@@ -65,10 +65,10 @@ Backend application pod.
 Internal backend service.
 
 06-ai-deployment.yaml  
-AI microservice pod.
+AI microservice pod (Future implementation - not currently deployed).
 
 07-ai-service.yaml  
-Internal AI service.
+Internal AI service (Future implementation - not currently deployed).
 
 08-frontend-deployment.yaml  
 Frontend UI pod.
@@ -91,8 +91,8 @@ External access to the frontend.
 14-network-policy.yaml  
 Implements zero-trust networking:
 - Frontend → Backend only
-- Backend → AI & Mongo only
-- AI & Mongo are not publicly accessible
+- Backend → MongoDB only
+- Services are isolated and not publicly accessible except through Ingress
 
 ---
 
@@ -102,18 +102,40 @@ Implements zero-trust networking:
     ```bash
     docker compose -f docker-compose.build.yaml build 
     ```
-2. Apply manifests:
+   Note: AI service build is commented out as it's not currently deployed.
+
+2. Apply manifests (excluding AI service files 06 and 07):
     ```bash
-    kubectl apply -f kubernetes/
+    kubectl apply -f k8s/01-namespace.yaml
+    kubectl apply -f k8s/02-backend-config.yaml
+    kubectl apply -f k8s/03-backend-secret.yaml
+    kubectl apply -f k8s/04-backend-deployment.yaml
+    kubectl apply -f k8s/05-backend-service.yaml
+    kubectl apply -f k8s/08-frontend-deployment.yaml
+    kubectl apply -f k8s/09-frontend-service.yaml
+    kubectl apply -f k8s/10-mongo-pvc.yaml
+    kubectl apply -f k8s/11-mongo-deployment.yaml
+    kubectl apply -f k8s/12-mongo-service.yaml
+    kubectl apply -f k8s/13-ingress.yaml
+    kubectl apply -f k8s/14-network-policy.yaml
     ```
+   Or apply all at once (AI files are commented out):
+    ```bash
+    kubectl apply -f k8s/
+    ```
+
 3. Verify:
     ```bash
     kubectl get all -n reciplore
+    kubectl get pods -n reciplore
+    kubectl get svc -n reciplore
     ```
 ---
 
 
 ## Notes
 
-- All deployments include only one pod for due to minimal available resources.
+- All deployments include only one pod due to minimal available resources.
 - Testing has been applied inside a minikube environment only.
+- AI service files (06-ai-deployment.yaml and 07-ai-service.yaml) are commented out for future implementation.
+- Network policy enforces Frontend → Backend → MongoDB communication only.
