@@ -15,7 +15,7 @@ services:
       - mongodb_data:/data/db
       - mongodb_config:/data/configdb
     networks:
-      - reciplore-network
+      - database-network
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 10s
@@ -43,10 +43,10 @@ services:
       mongodb:
         condition: service_healthy
     networks:
-      - reciplore-network
+      - database-network # Can access MongoDB
+      - application-network # Can access Frontend
     volumes:
-      # Mount for file uploads if needed (optional)
-      - ./backend/uploads:/app/uploads
+      - backend_uploads:/app/src/uploads
     healthcheck:
       test:
         [
@@ -75,7 +75,7 @@ services:
       backend:
         condition: service_healthy
     networks:
-      - reciplore-network
+      - application-network
     healthcheck:
       test:
         [
@@ -97,8 +97,18 @@ volumes:
     driver: local
   mongodb_config:
     driver: local
+  backend_uploads:
+    driver: local
 
-# Network for all services
 networks:
-  reciplore-network:
+  # Database Network: Only Backend and MongoDB
+  # MongoDB is isolated from Frontend and AI Service
+  database-network:
     driver: bridge
+    name: reciplore-database
+
+  # Application Network: Frontend and Backend
+  # Frontend can only reach Backend
+  application-network:
+    driver: bridge
+    name: reciplore-application
