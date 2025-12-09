@@ -36,7 +36,6 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
-      ### === BACKEND ===
       - name: Install backend dependencies
         working-directory: backend
         run: pnpm install
@@ -53,7 +52,6 @@ jobs:
         working-directory: backend
         run: docker build -t recipiore-backend:latest .
 
-      ### === FRONTEND ===
       - name: Install frontend dependencies
         working-directory: frontend
         run: pnpm install
