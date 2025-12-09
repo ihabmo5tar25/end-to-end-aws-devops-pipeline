@@ -2,34 +2,33 @@
 
 ## Project Overview
 
-This project implements a complete DevOps automation pipeline for Reciplore - a recipe discovery and e-commerce platform. The solution containerizes the application using Docker, orchestrates services with Kubernetes (Minikube), leverages AWS S3 for dataset storage, and implements full CI/CD automation with GitHub Actions. The platform features a React frontend, Express.js backend, Flask AI service for recipe recommendations, and MongoDB for data persistence, all monitored through Prometheus and Grafana.
+This project implements a complete DevOps automation pipeline for Reciplore - a recipe discovery and e-commerce platform. The solution containerizes the application using Docker, orchestrates services with Docker Compose and Kubernetes (Minikube), and implements full CI/CD automation with GitHub Actions. The platform features a React frontend, Express.js backend, and MongoDB for data persistence, all monitored through Prometheus and Grafana. Infrastructure automation is handled through Ansible playbooks, and the project is designed to be deployed on AWS cloud infrastructure.
 
 ## Objectives
 
 - Automated Deployment: Implement full CI/CD pipeline with GitHub Actions for automated testing and deployment
-- Containerization: Dockerize all application components (frontend, backend, AI service, database)
-- Cloud Integration: Utilize AWS S3 for recipe dataset storage and management
-- Local Orchestration: Set up Kubernetes cluster using Minikube for local development and testing
+- Containerization: Dockerize all application components (frontend, backend, database)
+- Infrastructure Automation: Use Ansible playbooks for infrastructure provisioning and configuration
+- Local Orchestration: Set up Docker Compose for local development and Kubernetes cluster using Minikube for testing
 - Monitoring: Implement comprehensive monitoring with Prometheus and Grafana
 - Scalability: Design architecture that can scale to production AWS EKS when needed
 - Reproducibility: Ensure environment consistency through Infrastructure as Code practices
 
 ## Technology Stack
 
-|  Category         |  Tools & Services              |
-|-------------------|--------------------------------|
-| Frontend          | React, Vite, JavaScript        |
-| Backend           | Express.js, Node.js, pnpm      |
-| AI (FURURE)       | Flask, Python, Pandas, Scikit-learn |
-| Database          | MongoDB                        |
-| Setup             | Ansible                        |
-| Containerization  | Docker                         |
-| Orchestration     | Docker Compose & Kubernetes (Minikube) |
-| Cloud Services    | AWS For Deployment             |
-| CI/CD             | GitHub Actions                 |
-| VCS               | GIT                            | 
-| Monitoring        | Prometheus, Grafana            |
-
+| Category         | Tools & Services                       |
+| ---------------- | -------------------------------------- |
+| Frontend         | React, Vite, JavaScript                |
+| Backend          | Express.js, Node.js, pnpm              |
+| AI (FURURE)      | Flask, Python, Pandas, Scikit-learn    |
+| Database         | MongoDB                                |
+| Setup            | Ansible                                |
+| Containerization | Docker                                 |
+| Orchestration    | Docker Compose & Kubernetes (Minikube) |
+| Cloud Services   | AWS For Deployment                     |
+| CI/CD            | GitHub Actions                         |
+| VCS              | GIT                                    |
+| Monitoring       | Prometheus, Grafana                    |
 
 ## Data Flow Architecture
 
@@ -46,9 +45,7 @@ This project implements a complete DevOps automation pipeline for Reciplore - a 
 │  (User Data)│ ──────────────────► │  Service    │    Sync          │(Recipe Data)│
 └─────────────┘    Recommendations  │  (Flask)    │                  └─────────────┘
                                     └─────────────┘
-```                               
-
-
+```
 
 #### Infrastructure Architecture:
 
@@ -158,12 +155,6 @@ cd ..
 - Builds React application with Vite
 - Serves static files via Nginx
 - Exposes port 80 with health checks
-
-**AI Service Dockerfile** (`ai/Dockerfile`):
-
-- Python-based Flask service
-- Downloads dataset and models from AWS S3 on startup
-- Exposes port 5000 for API endpoints
 
 #### Docker Compose Setup:
 
