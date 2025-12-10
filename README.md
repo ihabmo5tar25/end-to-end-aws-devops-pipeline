@@ -354,7 +354,7 @@ jobs:
           --health-cmd="mongosh --eval 'db.adminCommand(\"ping\")'"
           --health-interval=10s
           --health-timeout=5s
-          --health-retries=5
+          --health-retries=10
 
     steps:
       - name: Checkout code
@@ -371,46 +371,21 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
-      - name: Wait for MongoDB
-        run: |
-          for i in {1..30}; do
-            if mongosh "mongodb://mongo:27017" --eval "db.stats()" > /dev/null 2>&1; then
-              echo "MongoDB is ready!"
-              exit 0
-            fi
-            echo "Waiting for MongoDB..."
-            sleep 2
-          done
-          echo "MongoDB did not become ready in time!"
-          exit 1
-
-      # BACKEND
-
       - name: Install backend dependencies
         working-directory: backend
         run: pnpm install
-
-      - name: Run backend unit tests
-        working-directory: backend
-        env:
-          PORT: 3000
-          NODE_ENV: test
-          DB_TEST: "mongodb://mongo:27017/recipiore-test"
-        run: ~/.bun/bin/bun test
 
       - name: Run backend e2e tests
         working-directory: backend
         env:
           PORT: 3000
           NODE_ENV: test
-          DB_TEST: "mongodb://mongo:27017/recipiore-test"
-        run: ~/.bun/bin/bun test:e2e
+          DB_TEST: "mongodb://localhost:27017/graduationproject_test"
+        run: ~/.bun/bin/bun test
 
       - name: Build backend Docker image
         working-directory: backend
         run: docker build -t recipiore-backend:latest .
-
-      # FRONTEND
 
       - name: Install frontend dependencies
         working-directory: frontend
