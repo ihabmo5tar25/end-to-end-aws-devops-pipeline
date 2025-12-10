@@ -1,35 +1,37 @@
-# End-to-End AWS DevOps Automation Pipeline for Reciplore E-commerce 
+# End-to-End AWS DevOps Automation Pipeline for Reciplore E-commerce
 
 ## Project Overview
 
-This project implements a complete DevOps automation pipeline for Reciplore - a recipe discovery and e-commerce platform. The solution containerizes the application using Docker, orchestrates services with Kubernetes (Minikube), leverages AWS S3 for dataset storage, and implements full CI/CD automation with GitHub Actions. The platform features a React frontend, Express.js backend, Flask AI service for recipe recommendations, and MongoDB for data persistence, all monitored through Prometheus and Grafana.
+This project implements a complete DevOps automation pipeline for Reciplore - a recipe discovery and e-commerce platform. The solution containerizes the application using Docker, orchestrates services with Docker Compose and Kubernetes (Minikube), and implements full CI/CD automation with GitHub Actions. The platform features a React frontend, Express.js backend, and MongoDB for data persistence, all monitored through Prometheus and Grafana. Infrastructure automation is handled through Ansible playbooks, and the project is designed to be deployed on AWS cloud infrastructure.
 
-##  Objectives
+## Objectives
+
 - Automated Deployment: Implement full CI/CD pipeline with GitHub Actions for automated testing and deployment
-- Containerization: Dockerize all application components (frontend, backend, AI service, database)
-- Cloud Integration: Utilize AWS S3 for recipe dataset storage and management
-- Local Orchestration: Set up Kubernetes cluster using Minikube for local development and testing
+- Containerization: Dockerize all application components (frontend, backend, database)
+- Infrastructure Automation: Use Ansible playbooks for infrastructure provisioning and configuration
+- Local Orchestration: Set up Docker Compose for local development and Kubernetes cluster using Minikube for testing
 - Monitoring: Implement comprehensive monitoring with Prometheus and Grafana
 - Scalability: Design architecture that can scale to production AWS EKS when needed
 - Reproducibility: Ensure environment consistency through Infrastructure as Code practices
 
 ## Technology Stack
 
-|  Category         |  Tools & Services              |
-|-------------------|--------------------------------|
-| Frontend          | React, Vite, JavaScript        |
-| Backend           | Express.js, Node.js, pnpm      |
-| AI Service        | Flask, Python, Pandas, Scikit-learn |
-| Database          | MongoDB                        |
-| Containerization  | Docker                         |
-| Orchestration     | Kubernetes (Minikube)          |
-| Cloud Services    | AWS S3, AWS IAM, AWS CLI       |
-| CI/CD             | GitHub Actions                 |
-| Monitoring        | Prometheus, Grafana            |
-| Data              | RecipeNLG Dataset (2GB CSV)    |
-
+| Category         | Tools & Services                       |
+| ---------------- | -------------------------------------- |
+| Frontend         | React, Vite, JavaScript                |
+| Backend          | Express.js, Node.js, pnpm              |
+| AI (FURURE)      | Flask, Python, Pandas, Scikit-learn    |
+| Database         | MongoDB                                |
+| Setup            | Ansible                                |
+| Containerization | Docker                                 |
+| Orchestration    | Docker Compose & Kubernetes (Minikube) |
+| Cloud Services   | AWS For Deployment                     |
+| CI/CD            | GitHub Actions                         |
+| VCS              | GIT                                    |
+| Monitoring       | Prometheus, Grafana                    |
 
 ## Data Flow Architecture
+
 ```ascii
 ┌─────────────┐    HTTP Requests    ┌─────────────┐    API Calls    ┌─────────────┐
 │   User      │ ──────────────────► │  Frontend   │ ──────────────► │   Backend   │
@@ -37,7 +39,7 @@ This project implements a complete DevOps automation pipeline for Reciplore - a 
 └─────────────┘    HTML/CSS/JS      └─────────────┘    JSON Data    └─────────────┘
                                                                          │
                                                                          │ Database Queries
-                                                                         ▼
+                                        (FURURE)                                 ▼
 ┌─────────────┐    Recipe Data      ┌─────────────┐    Dataset       ┌─────────────┐
 │   MongoDB   │ ◄────────────────── │   AI        │ ◄─────────────── │   AWS S3    │
 │  (User Data)│ ──────────────────► │  Service    │    Sync          │(Recipe Data)│
@@ -45,9 +47,8 @@ This project implements a complete DevOps automation pipeline for Reciplore - a 
                                     └─────────────┘
 ```
 
-
-
 #### Infrastructure Architecture:
+
 ```ascii
 ┌─────────────────────────────────────────────────────────────┐
 │                     GitHub Repository                       │
@@ -75,7 +76,7 @@ This project implements a complete DevOps automation pipeline for Reciplore - a 
 │  │                Application Layer                     │   │
 │  │  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌────────┐   │   │
 │  │  │Frontend │  │ Backend │  │   AI    │  │MongoDB │   │   │
-│  │  │ (React) │  │(Node.js)│  │(Flask)  │  │        │   │   │
+│  │  │ (React) │  │(Node.js)│  │(FUTURE) │  │        │   │   │
 │  │  └─────────┘  └─────────┘  └─────────┘  └────────┘   │   │
 │  └──────────────────────────────────────────────────────┘   │
 │  ┌──────────────────────────────────────────────────────┐   │
@@ -90,106 +91,97 @@ This project implements a complete DevOps automation pipeline for Reciplore - a 
 ┌─────────────────────────────────────────────────────────────┐
 │                        AWS Cloud                            │
 │                  ┌──────────────┐                           │
-│                  │   S3 Bucket  │                           │
-│                  │(Recipe Data) │                           │
+│                  │  Deployment  │                           │
+│                  │              │                           │
 │                  └──────────────┘                           │
 └─────────────────────────────────────────────────────────────┘
 ```
-## Phased Implementation Plan (10 Weeks)
-### Week 1: Project Setup & Repository Structure
+
+## Phased Implementation Plan (9 Phases)
+
+### Phase 1: Project Setup & Repository Structure
+
 #### Tasks:
 
-- Clone existing repositories
-- Create unified project structure
-- Set up documentation
-- Initialize version control
-#### Commands:
+- Clone the unified repository
+- Set up local development environment
+- Configure environment variables
+- Verify project structure
+
+#### Setup Commands:
+
 ```bash
-# Create main project directory
-mkdir recipiore-devops-pipeline
-cd recipiore-devops-pipeline
+# Clone the repository
+git clone -b develop https://github.com/ihabmo5tar25/end-to-end-aws-devops-pipeline.git
+cd end-to-end-aws-devops-pipeline
 
-# Clone existing repositories
-git clone https://github.com/yous0001/Graduation-Project backend
-git clone https://github.com/yous0001/Reciplore-frontend frontend
+# Install dependencies for backend
+cd backend
+pnpm install
 
-# Create AI service directory
-mkdir ai-service
+# Install dependencies for frontend
+cd ../frontend
+pnpm install
 
-# Create DevOps infrastructure
-mkdir -p .github/workflows kubernetes/{backend,frontend,ai-service,database} scripts terraform monitoring docs
+# Install dependencies for AI service (if needed)
+cd ../ai
+pip install -r requirements.txt
 
-# Initialize main repository
-git init
-echo "# End-to-End DevOps Pipeline for Reciplore E-commerce" > README.md
-```bash
-### Week 2: Containerization of All Services
+# Return to root directory
+cd ..
+```
+
+### Phase 2: Containerization of All Services
+
 #### Tasks:
 
-- Create Dockerfiles for all services
+- Build Docker images for all services
 - Set up docker-compose for local development
-- Test container builds
-- Create container optimization scripts
-#### Files:
-##### 1- Backend Dockerfile (backend/Dockerfile):
-```Dockerfile
-FROM node:18-alpine
+- Test container builds and service communication
+- Verify multi-container orchestration
 
-WORKDIR /app
+#### Docker Setup:
 
-# Install pnpm globally
-RUN npm install -g pnpm
+**Backend Dockerfile** (`backend/Dockerfile`):
 
-# Copy package files
-COPY package.json pnpm-lock.yaml ./
+- Multi-stage build using Node.js 20 Alpine
+- Installs pnpm and production dependencies
+- Creates non-root user for security
+- Exposes port 3000 with health checks
 
-# Install dependencies
-RUN pnpm install --frozen-lockfile
+**Frontend Dockerfile** (`frontend/Dockerfile`):
 
-# Copy source code
-COPY . .
+- Multi-stage build: Node.js builder + Nginx production
+- Builds React application with Vite
+- Serves static files via Nginx
+- Exposes port 80 with health checks
 
-# Create logs directory
-RUN mkdir -p logs
+#### Docker Compose Setup:
 
-# Expose port
-EXPOSE 3000
+```bash
+# Start all services
+docker compose up -d
 
-# Start the application
-CMD ["pnpm", "start"]
+# View logs
+docker compose logs -f
+
+# Stop all services
+docker compose down
+
+# Rebuild and restart
+docker compose up -d --build
 ```
-##### 2- Frontend Dockerfile (frontend/Dockerfile):
-```Dockerfile
-FROM node:18-alpine as builder
 
-WORKDIR /app
+The `docker-compose.yml` file orchestrates:
 
-# Copy package files
-COPY package.json package-lock.json ./
+- MongoDB database service
+- Backend API service (Express.js)
+- Frontend web service (React + Nginx)
+- Network isolation between services
+- Volume mounts for persistent data
 
-# Install dependencies
-RUN npm ci
+### Phase 3: Local Kubernetes Cluster Setup
 
-# Copy source code
-COPY . .
-
-# Build the application
-RUN npm run build
-
-# Production stage
-FROM nginx:alpine
-
-# Copy built application
-COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Copy nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
-```
-### Week 3: Local Kubernetes Cluster Setup
 #### Tasks:
 
 - Install and configure Minikube
@@ -198,6 +190,7 @@ CMD ["nginx", "-g", "daemon off;"]
 - Configure kubectl and Helm
 
 #### Setup Script (scripts/setup-minikube.sh):
+
 ```bash
 #!/bin/bash
 
@@ -231,33 +224,9 @@ EOF
 echo "Minikube setup completed successfully!"
 echo "Cluster IP: $(minikube ip)"
 ```
-### Week 4: AWS Infrastructure Setup
-#### Tasks:
 
-- Create AWS S3 bucket for dataset
-- Set up IAM roles and policies
-- Configure AWS CLI
-- Create Terraform configurations
+### Phase 4: Kubernetes Deployment Configuration
 
-#### Terraform Configuration (terraform/main.tf):
-```hcl
-provider "aws" {
-  region = "us-east-1"
-}
-
-resource "aws_s3_bucket" "recipiore_dataset" {
-  bucket = "recipiore-dataset-${var.environment}"
-
-  tags = {
-    Name        = "Reciplore Dataset Storage"
-    Environment = var.environment
-    Project     = "Reciplore"
-  }
-}
-```
-
-
-### Week 5: Kubernetes Deployment Configuration
 #### Tasks:
 
 - Create Kubernetes deployment manifests
@@ -266,6 +235,7 @@ resource "aws_s3_bucket" "recipiore_dataset" {
 - Create persistent volume claims
 
 #### Backend Deployment (kubernetes/backend/deployment.yaml):
+
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -285,39 +255,39 @@ spec:
         app: recipiore-backend
     spec:
       containers:
-      - name: backend
-        image: recipiore-backend:latest
-        ports:
-        - containerPort: 3000
-        env:
-        - name: MONGODB_URI
-          valueFrom:
-            secretKeyRef:
-              name: mongodb-secret
-              key: connection-string
-        - name: AI_SERVICE_URL
-          value: "http://ai-service.recipiore.svc.cluster.local:5000"
-        - name: NODE_ENV
-          value: "production"
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 3000
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 3000
-          initialDelaySeconds: 5
-          periodSeconds: 5
+        - name: backend
+          image: recipiore-backend:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: connection-string
+            - name: AI_SERVICE_URL
+              value: "http://ai-service.recipiore.svc.cluster.local:5000"
+            - name: NODE_ENV
+              value: "production"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 5
 ---
 apiVersion: v1
 kind: Service
@@ -328,12 +298,15 @@ spec:
   selector:
     app: recipiore-backend
   ports:
-  - protocol: TCP
-    port: 3000
-    targetPort: 3000
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
 ```
 
-### Week 6: AI Service Implementation
+### Phase 5: AI Service Implementation
+
+> **Note**: This phase is planned for future implementation. The AI service will be developed to provide recipe recommendations using machine learning algorithms.
+
 #### Tasks:
 
 - Develop Flask AI service
@@ -342,12 +315,14 @@ spec:
 - Create API endpoints
 
 #### AI Service Implementation (ai-service/app.py):
+
 ```python
 //this file will be add next
 
 ```
 
-### Week 7: CI/CD Pipeline Implementation
+### Phase 6: CI/CD Pipeline Implementation
+
 #### Tasks:
 
 - Set up GitHub Actions workflows
@@ -356,6 +331,7 @@ spec:
 - Implement environment-specific configurations
 
 #### CI Pipeline (.github/workflows/ci.yml):
+
 ```yaml
 name: CI Pipeline
 
@@ -378,89 +354,81 @@ jobs:
           --health-cmd="mongosh --eval 'db.adminCommand(\"ping\")'"
           --health-interval=10s
           --health-timeout=5s
-          --health-retries=5
+          --health-retries=10
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.17.0'
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20.17.0'
+      - name: Install Bun
+        run: |
+          curl -fsSL https://bun.sh/install | bash
+          echo "$HOME/.bun/bin" >> $GITHUB_PATH
 
-    - name: Install Bun
-      run: curl -fsSL https://bun.sh/install | bash
+      - name: Install pnpm
+        run: npm install -g pnpm
 
-    - name: Install pnpm
-      run: npm install -g pnpm
+      - name: Install backend dependencies
+        working-directory: backend
+        run: pnpm install
 
-    
-    
-    
-    - name: Wait for MongoDB
-      run: |
-        for i in {1..30}; do
-          if mongosh "mongodb://mongo:27017" --eval "db.stats()" > /dev/null 2>&1; then
-            echo "MongoDB is ready!"
-            exit 0
-          fi
-          echo "Waiting for MongoDB..."
-          sleep 2
-        done
-        echo "MongoDB did not become ready in time!"
-        exit 1
+      - name: Run backend unit tests
+        working-directory: backend
+        env:
+          PORT: 3000
+          NODE_ENV: test
+          DB_TEST: "mongodb://localhost:27017/graduationproject_test"
+        run: bun test
 
-   
-    # BACKEND
-    
-    - name: Install backend dependencies
-      working-directory: backend
-      run: pnpm install
+      - name: Run backend e2e tests
+        working-directory: backend
+        env:
+          PORT: 3000
+          NODE_ENV: test
+          DB_TEST: "mongodb://localhost:27017/graduationproject_test"
+        run: bun test:e2e
 
-    - name: Run backend unit tests
-      working-directory: backend
-      env:
-        PORT: 3000
-        NODE_ENV: test
-        DB_TEST: "mongodb://mongo:27017/recipiore-test"
-      run: ~/.bun/bin/bun test
+      - name: Build backend Docker image
+        working-directory: backend
+        run: docker build -t recipiore-backend:latest .
 
-    - name: Run backend e2e tests
-      working-directory: backend
-      env:
-        PORT: 3000
-        NODE_ENV: test
-        DB_TEST: "mongodb://mongo:27017/recipiore-test"
-      run: ~/.bun/bin/bun test:e2e
+      - name: Log in to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Build backend Docker image
-      working-directory: backend
-      run: docker build -t recipiore-backend:latest .
+      - name: Push backend Docker image to Docker Hub
+        working-directory: backend
+        run: |
+          docker tag recipiore-backend:latest ${{ secrets.DOCKERHUB_USERNAME }}/recipiore-backend:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/recipiore-backend:latest
 
-    
-    # FRONTEND
-    
-    - name: Install frontend dependencies
-      working-directory: frontend
-      run: pnpm install
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: pnpm install
 
-    - name: Lint frontend code
-      working-directory: frontend
-      run: pnpm run lint
+      - name: Lint frontend code
+        working-directory: frontend
+        run: pnpm run lint
 
-    - name: Build frontend
-      working-directory: frontend
-      run: pnpm run build
+      - name: Build frontend
+        working-directory: frontend
+        run: pnpm run build
 
-    - name: Build frontend Docker image
-      working-directory: frontend
-      run: docker build -t recipiore-frontend:latest .
-
+      - name: Build frontend Docker image
+        working-directory: frontend
+        run: docker build -t recipiore-frontend:latest .
 ```
 
-### Week 8: Monitoring and Logging Setup
+### Phase 7: Monitoring and Logging Setup (future)
+> This Section is future-proof, to be done in the next phases.
+
 #### Tasks:
 
 - Deploy Prometheus and Grafana
@@ -468,13 +436,14 @@ jobs:
 - Configure logging
 - Create monitoring dashboards
 
-#### Prometheus Configuration (monitoring/prometheus.yaml):
+#### Prometheus Configuration (monitoring/prometheus.yaml): 
 
 ```yaml
 //this file will be add next
 ```
 
-### Week 9: Security and Optimization
+### Phase 8: Security and Optimization
+
 #### Tasks:
 
 - Implement security best practices
@@ -488,41 +457,150 @@ jobs:
 //this file will be add next
 ```
 
-### Week 10: Documentation and Final Testing
-#### Tasks:
+### Phase 9: Documentation and Final Testing
 
-- Complete project documentation
-- Perform end-to-end testing
-- Create deployment guides
-- Prepare demonstration materials
+#### Completed Tasks:
 
-#### Final Documentation Structure:
-```text
-docs/
-├── SETUP.md
-├── DEPLOYMENT.md
-├── ARCHITECTURE.md
-├── API.md
-├── TROUBLESHOOTING.md
-└── MONITORING.md
+**Documentation:**
+
+- ✅ Main project documentation (`README.md`) with complete project overview, architecture, and setup instructions
+- ✅ Docker deployment guide (`README.DOCKER.md`) with detailed Docker Compose setup and usage
+- ✅ Kubernetes deployment guide (`k8s/README.MD`) with manifest descriptions and deployment steps
+- ✅ Backend documentation (`backend/README.md`) with API features and setup
+- ✅ Frontend documentation (`frontend/README.md`) with frontend-specific information
+- ✅ Comprehensive Getting Started guide with prerequisites and quick start instructions
+- ✅ Phased implementation plan documenting all 9 phases
+
+**Testing Infrastructure:**
+
+- ✅ Backend end-to-end (e2e) tests implemented using Bun test framework
+- ✅ Test suites covering: Authentication, Banners, Categories, Countries, Recipes, Recommendations
+- ✅ Test server setup (`backend/tests/e2e/setupServer.js`) for isolated test environments
+- ✅ Database test utilities for test data management
+- ✅ CI/CD pipeline integration for automated test execution
+- ✅ Frontend linting setup with ESLint for code quality
+
+**Deployment Guides:**
+
+- ✅ Docker Compose deployment guide with service orchestration
+- ✅ Kubernetes deployment guide with step-by-step instructions
+- ✅ Network isolation documentation
+- ✅ Environment variable configuration guides
+
+**Testing Coverage:**
+
+- ✅ Backend API e2e tests for core functionality
+- ✅ Automated testing in CI/CD pipeline
+- ✅ Health check endpoints for service monitoring
+- ✅ Database initialization and migration scripts
+
+#### Documentation Structure:
+
 ```
+Project Root/
+├── README.md                    # Main project documentation
+├── README.DOCKER.md             # Docker deployment guide
+├── backend/
+│   ├── README.md                # Backend API documentation
+│   └── tests/
+│       └── e2e/                 # End-to-end test suites
+│           ├── app.e2e.spec.js
+│           ├── auth.e2e.spec.js
+│           ├── banner.e2e.spec.js
+│           ├── category.e2e.spec.js
+│           ├── country.e2e.spec.js
+│           ├── recipe.e2e.spec.js
+│           ├── recommendation.e2e.spec.js
+│           └── setupServer.js
+├── frontend/
+│   └── README.md                # Frontend documentation
+└── k8s/
+    └── README.MD                # Kubernetes deployment guide
+```
+
+#### Testing Commands:
+
+**Backend Testing:**
+
+```bash
+# Run all tests
+cd backend
+bun test
+
+# Run e2e tests only
+bun test:e2e
+
+# Run specific test file
+bun test tests/e2e/auth.e2e.spec.js
+```
+
+**Frontend Testing:**
+
+```bash
+# Lint frontend code
+cd frontend
+pnpm run lint
+```
+
+**CI/CD Testing:**
+
+- Tests run automatically on every push and pull request
+- MongoDB service container provides isolated test database
+- All tests must pass before code can be merged
+
 ## Getting Started
+
 ### Prerequisites
 
 - Docker and Docker Compose
-- Minikube
-- AWS CLI configured
+- Minikube (for Kubernetes deployment)
+- AWS CLI configured (for S3 access)
 - kubectl
-- Node.js 18+
+- Node.js 20.17.0+
 - Python 3.9+
+- pnpm (Node.js package manager)
 - Git v2.x
-## How to Use / Deploy
-[Instructions will be added as project progresses]
+
+### Quick Start
+
+1. **Clone the repository:**
+
+   ```bash
+   git clone -b develop https://github.com/ihabmo5tar25/end-to-end-aws-devops-pipeline.git
+   cd end-to-end-aws-devops-pipeline
+   ```
+
+2. **Set up environment variables:**
+
+   - Copy `backend/config/dev.env.example` to `backend/config/dev.env` and configure your settings
+   - Configure MongoDB connection strings
+   - Set up AWS credentials for deployment (if deploying to AWS)
+
+3. **Start with Docker Compose:**
+
+   ```bash
+   docker compose up -d
+   ```
+
+   This will start:
+
+   - MongoDB on port 27017
+   - Backend API on port 3000
+   - Frontend on port 80
+
+4. **Access the application:**
+   - Frontend: [http://localhost](http://ec2-18-191-139-42.us-east-2.compute.amazonaws.com/)
+   - Backend API: 
+   - API Documentation:
+
+For detailed deployment instructions, see [README.DOCKER.md](./README.DOCKER.md)
 
 ## 📝 License
----
-## Summary
-This comprehensive implementation plan provides a complete roadmap for deploying the Reciplore e-commerce platform with a robust DevOps pipeline. The architecture combines local Kubernetes for application orchestration with AWS cloud services for storage and scalability, creating a production-ready deployment suitable for showcasing DevOps expertise.
 
+---
+
+## Summary
+
+This comprehensive implementation plan provides a complete roadmap for deploying the Reciplore e-commerce platform with a robust DevOps pipeline. The architecture combines local Kubernetes for application orchestration with AWS cloud services for storage and scalability, creating a production-ready deployment suitable for showcasing DevOps expertise.
 
 **Note**: This project is currently in development. Check back for updates!
