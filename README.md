@@ -426,7 +426,7 @@ jobs:
         run: docker build -t recipiore-frontend:latest .
 ```
 
-### Phase 7: Monitoring and Logging Setup 
+### Phase 7: Monitoring and Logging Setup (future)
 > This Section is future-proof, to be done in the next phases.
 
 #### Tasks:
@@ -436,7 +436,7 @@ jobs:
 - Configure logging
 - Create monitoring dashboards
 
-#### Prometheus Configuration (monitoring/prometheus.yaml):
+#### Prometheus Configuration (monitoring/prometheus.yaml): 
 
 ```yaml
 //this file will be add next
@@ -589,9 +589,9 @@ pnpm run lint
    - Frontend on port 80
 
 4. **Access the application:**
-   - Frontend: http://localhost
-   - Backend API: http://localhost:3000
-   - API Documentation: http://localhost:3000/api-docs (if configured)
+   - Frontend: [http://localhost](http://ec2-18-191-139-42.us-east-2.compute.amazonaws.com/)
+   - Backend API: 
+   - API Documentation:
 
 For detailed deployment instructions, see [README.DOCKER.md](./README.DOCKER.md)
 
