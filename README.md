@@ -427,7 +427,7 @@ jobs:
 ```
 
 ### Phase 7: Monitoring and Logging Setup 
-> This Section is future-proof, to
+> This Section is future-proof, to be done in the next phases.
 
 #### Tasks:
 
