@@ -89,3 +89,9 @@ jobs:
       - name: Build frontend Docker image
         working-directory: frontend
         run: docker build -t recipiore-frontend:latest .
+
+      - name: Push frontend Docker image to Docker Hub
+        working-directory: frontend
+        run: |
+          docker tag recipiore-frontend:latest ${{ secrets.DOCKERHUB_USERNAME }}/recipiore-frontend:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/recipiore-frontend:latest
