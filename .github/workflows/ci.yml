@@ -2,9 +2,9 @@ name: CI Pipeline
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   build-and-test:
@@ -28,7 +28,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "20.17.0"
+          node-version: '20.17.0'
 
       - name: Install Bun
         run: curl -fsSL https://bun.sh/install | bash
@@ -40,7 +40,7 @@ jobs:
         working-directory: backend
         run: pnpm install
 
-      - name: Run backend e2e tests
+      - name: Run backend unit tests
         working-directory: backend
         env:
           PORT: 3000
@@ -48,9 +48,29 @@ jobs:
           DB_TEST: "mongodb://localhost:27017/graduationproject_test"
         run: ~/.bun/bin/bun test
 
+      - name: Run backend e2e tests
+        working-directory: backend
+        env:
+          PORT: 3000
+          NODE_ENV: test
+          DB_TEST: "mongodb://localhost:27017/graduationproject_test"
+        run: ~/.bun/bin/bun test:e2e
+
       - name: Build backend Docker image
         working-directory: backend
         run: docker build -t recipiore-backend:latest .
+
+      - name: Log in to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Push backend Docker image to Docker Hub
+        working-directory: backend
+        run: |
+          docker tag recipiore-backend:latest ${{ secrets.DOCKERHUB_USERNAME }}/recipiore-backend:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/recipiore-backend:latest
 
       - name: Install frontend dependencies
         working-directory: frontend
