@@ -123,10 +123,6 @@ pnpm install
 cd ../frontend
 pnpm install
 
-# Install dependencies for AI service (if needed)
-cd ../ai
-pip install -r requirements.txt
-
 # Return to root directory
 cd ..
 ```
@@ -229,79 +225,86 @@ echo "Cluster IP: $(minikube ip)"
 
 #### Tasks:
 
-- Create Kubernetes deployment manifests
-- Set up services and ingress
-- Configure ConfigMaps and Secrets
-- Create persistent volume claims
+- Create Kubernetes deployment manifests for all services
+- Set up services and ingress for external access
+- Configure ConfigMaps and Secrets for environment variables
+- Create persistent volume claims for MongoDB
+- Implement network policies for service isolation
 
-#### Backend Deployment (kubernetes/backend/deployment.yaml):
+#### Kubernetes Manifests Structure:
 
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: recipiore-backend
-  namespace: recipiore
-  labels:
-    app: recipiore-backend
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: recipiore-backend
-  template:
-    metadata:
-      labels:
-        app: recipiore-backend
-    spec:
-      containers:
-        - name: backend
-          image: recipiore-backend:latest
-          ports:
-            - containerPort: 3000
-          env:
-            - name: MONGODB_URI
-              valueFrom:
-                secretKeyRef:
-                  name: mongodb-secret
-                  key: connection-string
-            - name: AI_SERVICE_URL
-              value: "http://ai-service.recipiore.svc.cluster.local:5000"
-            - name: NODE_ENV
-              value: "production"
-          resources:
-            requests:
-              memory: "256Mi"
-              cpu: "250m"
-            limits:
-              memory: "512Mi"
-              cpu: "500m"
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 3000
-            initialDelaySeconds: 30
-            periodSeconds: 10
-          readinessProbe:
-            httpGet:
-              path: /health
-              port: 3000
-            initialDelaySeconds: 5
-            periodSeconds: 5
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: backend-service
-  namespace: recipiore
-spec:
-  selector:
-    app: recipiore-backend
-  ports:
-    - protocol: TCP
-      port: 3000
-      targetPort: 3000
+The Kubernetes manifests are located in the `k8s/` directory and follow this structure:
+
 ```
+k8s/
+├── 01-namespace.yaml          # Creates 'reciplore' namespace
+├── 02-backend-config.yaml     # Backend ConfigMap (non-sensitive env vars)
+├── 03-backend-secret.yaml     # Backend Secrets (MongoDB connection)
+├── 04-backend-deployment.yaml # Backend application deployment
+├── 05-backend-service.yaml    # Backend internal service
+├── 08-frontend-deployment.yaml # Frontend UI deployment
+├── 09-frontend-service.yaml   # Frontend internal service
+├── 10-mongo-pvc.yaml          # MongoDB persistent volume claim
+├── 11-mongo-deployment.yaml   # MongoDB deployment
+├── 12-mongo-service.yaml      # MongoDB service
+├── 13-ingress.yaml            # Ingress for external access
+└── 14-network-policy.yaml     # Network policies for security
+```
+
+#### Key Configuration Details:
+
+**Backend Deployment** (`k8s/04-backend-deployment.yaml`):
+
+- Single replica (can be scaled as needed)
+- Uses ConfigMap and Secrets for environment variables
+- Health checks: readiness and liveness probes on `/health` endpoint
+- Image: `baselabouelnour/backend-depi:latest`
+
+**Frontend Deployment** (`k8s/08-frontend-deployment.yaml`):
+
+- Single replica
+- Serves React application via Nginx
+- Exposes port 80
+
+**MongoDB Deployment** (`k8s/11-mongo-deployment.yaml`):
+
+- Single replica with persistent storage
+- Uses PVC for data persistence
+- Exposes port 27017
+
+**Network Policy** (`k8s/14-network-policy.yaml`):
+
+- Implements zero-trust networking
+- Frontend → Backend only
+- Backend → MongoDB only
+- Services are isolated and not publicly accessible except through Ingress
+
+#### Deployment Steps:
+
+1. **Install Calico** (required for NetworkPolicy support):
+
+   ```bash
+   kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/tigera-operator.yaml
+   ```
+
+2. **Apply all Kubernetes manifests**:
+
+   ```bash
+   kubectl apply -f k8s/
+   ```
+
+3. **Verify deployment**:
+
+   ```bash
+   kubectl get all -n reciplore
+   kubectl get pods -n reciplore
+   ```
+
+4. **Check service status**:
+   ```bash
+   kubectl get svc -n reciplore
+   kubectl get ingress -n reciplore
+   ```
 
 ### Phase 5: AI Service Implementation
 
@@ -329,6 +332,47 @@ spec:
 - Configure automated testing
 - Create build and deployment pipelines
 - Implement environment-specific configurations
+
+#### Core CI/CD Features:
+
+The CI/CD pipeline implements the following core features:
+
+**Automated Testing:**
+
+- Backend unit tests execution using Bun test framework
+- Backend end-to-end (e2e) tests for API integration
+- Frontend code linting with ESLint
+- MongoDB service integration for test database
+
+**Build Automation:**
+
+- Automated Docker image builds for backend and frontend services
+- Multi-stage Docker builds for optimized production images
+- Image tagging and versioning
+
+**Quality Assurance:**
+
+- Code quality checks before deployment
+- Automated test execution on every push and pull request
+- Prevents merging of broken code
+
+**Deployment Readiness:**
+
+- Validates all services build successfully
+- Ensures Docker images are production-ready
+- Prepares artifacts for deployment to Kubernetes or cloud infrastructure
+
+**Workflow Triggers:**
+
+- Runs on push to `main` branch
+- Runs on pull requests to `main` branch
+- Provides feedback on code changes before merging
+
+**Service Management:**
+
+- MongoDB service container for testing
+- Health checks and service readiness validation
+- Isolated test environments
 
 #### CI Pipeline (.github/workflows/ci.yml):
 

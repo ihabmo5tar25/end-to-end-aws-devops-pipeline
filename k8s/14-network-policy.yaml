@@ -6,29 +6,23 @@ metadata:
 spec:
   podSelector: {}
   policyTypes:
-  - Ingress
-  - Egress
+    - Ingress
+    - Egress
 
   ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app: frontend
-    - podSelector:
-        matchLabels:
-          app: backend
-    - podSelector:
-        matchLabels:
-          app: ai-service
+    - from:
+        - podSelector:
+            matchLabels:
+              app: frontend
+        - podSelector:
+            matchLabels:
+              app: backend
 
   egress:
-  - to:
-    - podSelector:
-        matchLabels:
-          app: backend
-    - podSelector:
-        matchLabels:
-          app: ai-service
-    - podSelector:
-        matchLabels:
-          app: mongo
+    - to:
+        - podSelector:
+            matchLabels:
+              app: backend
+        - podSelector:
+            matchLabels:
+              app: mongo

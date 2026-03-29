@@ -5,4 +5,3 @@ metadata:
   namespace: reciplore
 data:
   NODE_ENV: "production"
-  AI_SERVICE_URL: "http://ai-service:5000"
